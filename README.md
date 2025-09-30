@@ -10,7 +10,6 @@ This repo contains :
    -  QMD
    -  Html
  
-
 # Data access
 The data from these labs will be cateloged here. 
 
