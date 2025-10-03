@@ -1,0 +1,60 @@
+---
+title: "easter-island-lab"
+format: html
+editor: visual
+---
+
+Read in data
+
+```{r}
+pacman::p_load('tidyverse', 'sf', 'here', 'tmap', 'stars')
+```
+
+```{r}
+ei_points <- st_read(here('week1', "data", "easter-island", "ei_points.gpkg")) %>%  
+  head(36)
+
+
+ei_elev <- read_stars(here('week1', "data", "easter-island", "ei_elev.tif"))
+
+ei_borders <- st_read(here('week1', "data", "easter-island", "ei_border.gpkg"))
+
+ei_roads <- st_read(here('week1', "data", "easter-island", "ei_roads.gpkg"))
+```
+```{r}
+# 2. Create a map of the outline Rapa Nui using tm_shape() + tm_borders()
+tm_shape(ei_borders)+
+  tm_borders()
+```
+3. Create a multiple-object map with tmap
+
+…denote the island’s borders and continuous elevation
+…denote the island’s volcanoes and roads
+…play with the color palette and essential map elements
+
+```{r}
+# 3. Create a multiple-object map with tmap
+tm_shape(ei_borders)+
+  tm_borders()+
+tm_shape(ei_elev)+
+  tm_raster(col.scale = tm_scale_continuous(values = c(
+                                              '#E1DABD',
+                                              '#ABC798',
+                                              '#FFC4EB',
+                                              '#E6983F',
+                                              '#A0185A',
+                                              '#35012C')),
+            col.legend = tm_legend(title = 'Elevation (Meters)', reverse = TRUE))+
+tm_shape(ei_roads)+
+  tm_lines()+
+tm_shape(ei_points)+
+  tm_dots()+
+tm_symbols(size = .4, fill = 'red')+
+tm_layout(bg.color = 'blue')+
+tm_title('Easter Island Elevation and Volcanos', fontface = 'bold', frame = TRUE)+
+tm_compass(type = '4star', size = 3)+
+tm_scale_bar()
+  
+
+```
+
