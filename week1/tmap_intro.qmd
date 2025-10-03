@@ -47,10 +47,7 @@ pacman::p_load("tmap", 'stars', 'sf', 'here')
 
 ```{r}
 
-library(sf) # for vector data (more soon!)
-library(stars) # for raster data (more soon!)
-library(tmap) # for static and interactive maps
-library(here)
+
 ```
 
 ## 3. Specifying spatial data
@@ -488,12 +485,18 @@ Similar to the `theme()` function in `ggplot2`, the `tm_layout()` function in `t
 ```{r}
 tm_shape(world_vector)+
   tm_polygons(fill = 'wb_income_region',
-              fill.legend = tm_legend(title = "Region Income"))+
+              fill.legend = tm_legend(title = "Region Income"),
+              fill.scale = tm_scale(breaks = c(0, 5000, 20000, 50000, Inf),
+                                    labels = c('Low', 'Medium', 'High', 'Very High')))+
   tm_title(text = 'Global Income',
            frame = TRUE)+
-  tm_layout(text.fontfamily = "Times New Roman",
+  tm_layout(color_vision_deficiency_sim = ('protan'),
+            text.fontfamily = "Times New Roman",
             style = 'beaver',
-            bg.color = 'blue')
+            bg.color = 'blue',
+            title.color = 'green',
+            frame.double_line = TRUE)+
+  tm_crs('+proj=eqearth')
 ```
 
 
@@ -503,13 +506,19 @@ tm_shape(world_vector)+
 One of the most powerful aspects of `tmap` is the ease of creating interactive maps. `tmap` has two modes `"plot"` which creates static maps and `"view"` which creates interactive maps that can be easily embedded in quarto docs. It's as easy as using the `tmap_mode()`!
 
 ```{r}
+tmap_mode('view')
+```
 
+```{r}
+tm_shape(world_vector) +
+  tm_polygons(fill = 'gdp_per_cap',
+              fill.lwfwnd = tm_legend(title = 'GDP Per Capita'))
 ```
 
 To return to regular plotting mode, simply reset `tmap_mode`.
 
 ```{r}
-
+tmap_mode('plot')
 ```
 
 ## 8. Saving maps
@@ -517,7 +526,11 @@ To return to regular plotting mode, simply reset `tmap_mode`.
 Maps can be stored as objects for for adding additional layers and saving programmatically. Maps can be saved directly in `tmap` using the `tm_save()` function. 
 
 ```{r}
+map1 <- tm_shape(world_vector) +
+  tm_polygons(fill = 'gdp_per_cap',
+              fill.lwfwnd = tm_legend(title = 'GDP Per Capita'))
 
+tmap_save(map1, here('week1', 'tmap-example.png'))
 
 ```
 
