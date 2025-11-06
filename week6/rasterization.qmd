@@ -381,23 +381,25 @@ tmap_arrange(map1, map2, ndvi_map)
 ```{r}
 #| message: false
 # define NDVI as the normalized difference between NIR and red bands
-ndwi_fun <- function(nir, green){
-  (green - nir)/(nir + green)
+ndmi_fun <- function(nir, swir){
+  (nir - swir)/(nir + swir)
 }
 
 # apply NDVI function to Landsat bands 3 & 4
-ndwi_rast <- lapp(L7[[c(4,2)]], fun = ndwi_fun)
+ndmi_rast <- lapp(L7[[c(4,2)]], fun = ndmi_fun)
 
-names(ndwi_rast) <- 'NDWI'
+names(ndmi_rast) <- 'NDMI'
 
 # Visualize NDVI
-ndvi_map <- tm_shape(ndwi_rast) +
+ndmi_map <- tm_shape(ndmi_rast) +
   tm_raster(col.scale = tm_scale_continuous(values = "brewer.blues"),
-            col.legend = tm_legend(title = 'NDWI',
-                                   orientation = "portrait"))+
-  tm_title(text = 'NDWI')
+            col.legend = tm_legend(title = 'NDMI',
+                                   orientation = "portrait",
+                                   reverse = TRUE))+
+  tm_title(text = 'NDMI')
 
-tmap_arrange(map1, map2, ndvi_map)
+tmap_arrange(map1, map2, ndmi_map)
 ```
+
 
 
