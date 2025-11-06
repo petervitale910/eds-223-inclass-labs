@@ -388,7 +388,7 @@ ndwi_fun <- function(nir, green){
 # apply NDVI function to Landsat bands 3 & 4
 ndwi_rast <- lapp(L7[[c(4,2)]], fun = ndwi_fun)
 
-names(ndwi_rast) <- 'ND2I'
+names(ndwi_rast) <- 'NDWI'
 
 # Visualize NDVI
 ndvi_map <- tm_shape(ndwi_rast) +
